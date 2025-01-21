@@ -1,0 +1,55 @@
+/* 基础表格样式 */
+body,html{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* 表头样式 */
+thead {
+  background-color: #f8f9fa;
+}
+
+th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #2c3e50;
+  border-bottom: 2px solid #e9ecef;
+  text-transform: uppercase;
+  font-size: 14px;
+  border-right: 1px solid #e9ecef;;
+}
+
+/* 单元格样式 */
+td {
+  padding: 15px;
+  border-bottom: 1px solid #e9ecef;
+  color: #566573;
+  border-right: 1px solid #e9ecef;
+}
+
+/* 行悬停效果 */
+tbody tr:hover {
+  background-color: #f8f9fa;
+  transition: background-color 0.2s ease;
+}
+
+/* 表格斑马纹 */
+tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+/* 最后一行去除底部边框 */
+tbody tr:last-child td {
+  border-bottom: none;
+}
