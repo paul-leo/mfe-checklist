@@ -18,6 +18,7 @@
     "ws": "^8.18.0"
   },
   "devDependencies": {
+    "localhost-https": "^1.0.13",
     "nodemon": "^3.1.9"
   }
 }

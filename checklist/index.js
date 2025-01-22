@@ -4,7 +4,8 @@ const fs = require('fs');
 const path = require('path');
 const WebSocket = require('ws');
 const chokidar = require('chokidar');
-
+const getHttps = require('localhost-https');
+const https = require('https');
 // 从环境变量获取配置
 const PORT = process.env.PORT || 8888;
 const isDev = process.env.NODE_ENV === 'development';
@@ -17,10 +18,10 @@ let wss;
 if (isDev) {
     // 创建 WebSocket 服务器
     wss = new WebSocket.Server({ port: PORT + 1 });
-    
+
     wss.on('connection', (ws) => {
         console.log('Client connected to WebSocket');
-        
+
         ws.on('close', () => {
             console.log('Client disconnected from WebSocket');
         });
@@ -32,7 +33,7 @@ if (isDev) {
     // 监视静态文件变化
     const staticWatcher = chokidar.watch('static', {
         ignored: /(^|[\/\\])\../,
-        persistent: true
+        persistent: true,
     });
 
     staticWatcher.on('change', (path) => {
@@ -69,15 +70,16 @@ const wsClientScript = `
 `;
 
 // 启用 CORS
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(
+    cors({
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    })
+);
 
 // 静态文件中间件
 app.use('/static', express.static(path.join(__dirname, 'static')));
-
 
 // HTML 注入中间件（仅在开发模式）
 const injectHtml = (html) => {
@@ -115,12 +117,19 @@ app.use((err, req, res, next) => {
     console.error('Server error:', err);
     res.status(500).send('Internal Server Error');
 });
+const sslOptions = getHttps();
+const httpsServer = https.createServer(sslOptions, app);
 
-// 启动服务器
-app.listen(PORT, () => {
-    console.log(`Server running in ${isDev ? 'development' : 'production'} mode`);
-    console.log(`Server URL: http://localhost:${PORT}`);
+httpsServer.listen(PORT, () => {
+    console.log(
+        `Server running in ${isDev ? 'development' : 'production'} mode`
+    );
+    console.log(`Server URL: https://localhost:${PORT}`);
     if (isDev) {
         console.log(`WebSocket server running on port ${PORT + 1}`);
     }
 });
+// 启动服务器
+// app.listen(PORT, () => {
+
+// });
